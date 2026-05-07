@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+       body {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    min-height: 100vh;
+    font-family: 'Segoe UI', sans-serif;
+    color: white;
+}
+.card {
+    border: none;
+    border-radius: 24px;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(10px);
+    color: white;
+}
+.form-control {
+    border-radius: 12px;
+    border: 2px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.1);
+    color: white;
+    padding: 12px 18px;
+}
+.form-control::placeholder { color: rgba(255,255,255,0.5); }
+.form-control:focus {
+    background: rgba(255,255,255,0.15);
+    border-color: rgba(255,255,255,0.5);
+    color: white;
+    box-shadow: none;
+}
+.btn-search {
+    border-radius: 12px;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border: none;
+    font-weight: 600;
+    color: white;
+}
+.weather-card {
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    margin-top: 24px;
+    animation: fadeIn 0.6s ease;
+}
+.weather-emoji {
+    font-size: 5rem;
+    display: inline-block;
+    animation: bounce 2s infinite;
+}
+.temp { font-size: 3.5rem; font-weight: 700; }
+.condition { font-size: 1.3rem; opacity: 0.9; }
+.detail { font-size: 0.95rem; opacity: 0.7; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+}
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+@keyframes sway {
+    0%, 100% { transform: rotate(-10deg); }
+    50% { transform: rotate(10deg); }
+}
+@keyframes fall {
+    0% { transform: translateY(-10px); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translateY(10px); opacity: 0; }
+}
+
+.sunny { animation: spin 4s linear infinite; }
+.cloudy { animation: sway 3s ease-in-out infinite; }
+.rainy { animation: fall 1.5s ease-in-out infinite; }
+.snowy { animation: fall 2.5s ease-in-out infinite; }
+    </style>
+</head>
+<body>
+    <div class="container mt-5" style="max-width: 560px;">
+        <h1 class="text-center mb-2 fw-bold">Weather App</h1>
+        <p class="text-center mb-4" style="opacity:0.6;">Enter a city to get current weather</p>
+
+        <div class="card p-4 shadow">
+            <form action="/" method="POST" class="d-flex gap-2">
+                <input type="text" name="city" placeholder="Enter city..." required class="form-control">
+                <button type="submit" class="btn btn-search">Search</button>
+            </form>
+        </div>
+
+        {% if error %}
+            <div class="alert alert-danger mt-4 text-center border-0" style="border-radius:16px;">
+                {{ error }}
+            </div>
+        {% endif %}
+
+        {% if weather %}
+            <div class="weather-card shadow" style="background-color: {{ weather.bg }}; color: {{ weather.color }};">
+                <div class="weather-emoji {{ weather.condition | lower | replace(' ', '') }}">{{ weather.emoji }}</div>
+                <div class="temp mt-2">{{ weather.temp_f }}°F</div>
+                <div class="detail">{{ weather.temp_c }}°C</div>
+                <div class="condition mt-2">{{ weather.condition }}</div>
+                <hr style="border-color: {{ weather.color }}; opacity: 0.3;">
+                <div class="detail">📍 {{ weather.city }}</div>
+                <div class="detail mt-1">💨 Wind: {{ weather.wind }} km/h</div>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
